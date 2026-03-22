@@ -19,6 +19,7 @@ class UserSchema(SQLModel, table=True):
 class StoreSchema(SQLModel, table=True):
     __tablename__ = "stores"
     id: Optional[int] = Field(default=None, primary_key=True, nullable=False)
+    name: Optional[str] = Field(default=None, nullable=False)
 
 
 async def migrate(engine: AsyncEngine):
