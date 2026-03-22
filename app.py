@@ -1,3 +1,4 @@
+from typing import Any
 from fastapi import FastAPI, Request, Response
 from fastapi.concurrency import asynccontextmanager
 from fastapi.responses import JSONResponse
@@ -12,7 +13,7 @@ from utils.exception_handler import CustomExceptionHandler
 from utils.security_utils import generate_request_id
 
 @asynccontextmanager
-async def lifespan():
+async def lifespan(app: Any):
     await migrate(sessionmanager._engine)
     yield
     if sessionmanager._engine is not None:

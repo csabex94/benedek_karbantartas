@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection, async_sessionmaker, create_a
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 class DatabaseSession:
-    _db_url: str = "sqlite:///./database_01.db"
+    _db_url: str = "sqlite+aiosqlite:///./database/database_01.db"
 
     def __init__(self, engine_kwargs: dict[str, Any] = {}):
         self._engine = create_async_engine(url=self._db_url, **engine_kwargs)

@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        Megoldva!!!
     </div>
 </template>
 
