@@ -1,0 +1,36 @@
+import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue';
+import svgLoader from 'vite-svg-loader';
+import path from 'path';
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    tailwindcss(),
+    svgLoader({
+      defaultImport: "component",
+      svgoConfig: {
+          multipass: true
+      }
+  }),
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8000",
+        changeOrigin: true
+      }
+    }
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: false
+  },
+});
