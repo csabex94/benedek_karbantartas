@@ -12,8 +12,9 @@ from api_router import api_router
 from utils.exception_handler import CustomExceptionHandler
 from utils.security_utils import generate_request_id
 
+
 @asynccontextmanager
-async def lifespan(app: Any):
+async def lifespan(app: FastAPI):
     await migrate(sessionmanager._engine)
     yield
     if sessionmanager._engine is not None:
