@@ -10,7 +10,7 @@ class UserSchema(SQLModel, table=True):
     __tablename__ = "users"
     id: Optional[int] = Field(default=None, primary_key=True, nullable=False)
     email: Optional[str] = Field(default=None, nullable=False)
-    username: Optional[str] = Field(default=None, nullable=False)
+    fullname: Optional[str] = Field(default=None, nullable=False)
     password: Optional[str] = Field(default=None, nullable=False, min_length=8)
     created_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
     updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())

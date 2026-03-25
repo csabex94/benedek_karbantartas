@@ -2,3 +2,4 @@
 .venv
 
 /database/database_01.db
+/utils/user_auth.json
