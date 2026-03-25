@@ -16,13 +16,23 @@ class UserSchema(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
 
 
-class StoreSchema(SQLModel, table=True):
-    __tablename__ = "stores"
+class DepartmentSchema(SQLModel, table=True):
+    __tablename__ = "departments"
     id: Optional[int] = Field(default=None, primary_key=True, nullable=False)
     name: Optional[str] = Field(default=None, nullable=False)
-    city: Optional[str] = Field(default=None, nullable=False)
-    country: Optional[str] = Field(default=None, nullable=False)
-    ip_address: Optional[str] = Field(default=None, nullable=False)
+    created_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
+    updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
+
+
+class PrinterSchema(SQLModel, table=True):
+    __tablename__ = "printers"
+    id: Optional[int] = Field(default=None, primary_key=True, nullable=False)
+    name: Optional[str] = Field(default=None, nullable=False)
+    model: Optional[str] = Field(default=None, nullable=False)
+    type: Optional[str] = Field(default=None, nullable=False)
+    serial_number: Optional[str] = Field(default=None, nullable=False)
+    created_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
+    updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
 
 
 async def migrate(engine: AsyncEngine):
