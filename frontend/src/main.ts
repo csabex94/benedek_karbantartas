@@ -1,7 +1,7 @@
-import { createApp } from 'vue';
+import { createApp, type App } from 'vue';
 import {router} from './router';
-import App from './App.vue'
+import { default as MainApp } from './App.vue'
 
-const app = createApp(App).use(router);
+const app: App<Element> = createApp(MainApp).use(router);
 
 app.mount('#app');

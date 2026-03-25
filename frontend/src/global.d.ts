@@ -1,13 +1,22 @@
 
 export declare global {
-    type SidebarSubItem = {
+
+    interface ISidebarSubItem {
         title: string;
         url: string;
+        name: ?string;
     }
 
-    type SidebarItem = {
+    interface ISidebarItem {
         title: string;
         url: string;
         items: SibebarSubItem[]
     }
+
+    interface IPrinter {
+        id: number;
+        model: string;
+        ipAddress: string;
+    }
+
 }
