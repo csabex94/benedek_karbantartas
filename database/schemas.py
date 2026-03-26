@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import List, Optional
 from sqlalchemy import Column
 from sqlmodel import Field, Relationship, SQLModel
 from sqlalchemy.dialects.mysql import LONGTEXT
@@ -22,6 +22,7 @@ class DepartmentSchema(SQLModel, table=True):
     name: Optional[str] = Field(default=None, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
     updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
+    printers: list["PrinterSchema"] = Relationship(back_populates="deparment")
 
 
 class PrinterSchema(SQLModel, table=True):
@@ -33,6 +34,17 @@ class PrinterSchema(SQLModel, table=True):
     serial_number: Optional[str] = Field(default=None, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
     updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now())
+    department_id: Optional[int] = Field(foreign_key="departments.id")
+    department: Optional["DepartmentSchema"] = Relationship(back_populates="printers")
+    services: list["PrinterServiceSchema"] = Relationship(back_populates="printer")
+    
+    
+class PrinterServiceSchema(SQLModel, table=True):
+    __tablename__ = "printer_services"
+    id: Optional[int] = Field(default=None, primary_key=True, nullable=False)
+    name: Optional[str] = Field(default=None, nullable=False)
+    printer_id: Optional[int] = Field(foreign_key="printers.id")
+    printer: Optional["PrinterSchema"] = Relationship(back_populates="services")
 
 
 async def migrate(engine: AsyncEngine):
