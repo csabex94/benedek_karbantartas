@@ -23,7 +23,7 @@ sqids = Sqids(min_length=24)
 
 def password_hash(plain: str):
     salt = bcrypt.gensalt()
-    return bcrypt.hashpw(plain.encode(), salt)
+    return bcrypt.hashpw(plain.encode(), salt).decode()
 
 def password_check(check: str, hashed: str):
     return bcrypt.checkpw(check.encode(), hashed.encode())
@@ -60,7 +60,6 @@ def generate_random_secret_key() -> str:
 
 def generate_random_token(length: int = 16) -> str:
     return generate_token(length)
-
 
 def generate_request_id() -> str:
     return generate(size=32)

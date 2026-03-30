@@ -15,8 +15,18 @@ export declare global {
 
     interface IPrinter {
         id: number;
+        name: string;
         model: string;
+        type: string;
+        serialNumber: string;
         ipAddress: string;
+        createdAt: string;
+        updatedAt: string;
     }
 
+    interface IPrinterService {
+        id: number;
+        name: string;
+        details: ?string;
+    }
 }

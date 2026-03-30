@@ -4,6 +4,9 @@ from functools import lru_cache
 class Settings(BaseSettings):
     database_url: str
     api_key_secret: str
+    jwt_secret: str
+    jwt_algorithm: str
+    jwt_token_expire_minutes: str
     mail_smtp_server: str
     mail_smtp_port: int
     mail_smtp_user: str
