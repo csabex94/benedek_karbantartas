@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta, timezone
 import jwt
 
+from datetime import datetime, timedelta, timezone
+from jwt.exceptions import InvalidTokenError
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 from database.schemas import UserSchema
@@ -65,5 +66,8 @@ async def login_user(db: AsyncSession, loginUser: LoginUser, secret: str, algori
     return [access_token, user]
 
 async def get_current_user(token: str, secret: str, algorithm: str):
-    payload = jwt.decode(token, secret, algorithms=[algorithm])
-    return payload
+    try:
+        payload = jwt.decode(token, secret, algorithms=[algorithm])
+        return payload
+    except InvalidTokenError:
+        raise CustomExceptionHandler('unauthorized', 'Access Denied', 401)

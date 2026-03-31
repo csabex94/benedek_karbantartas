@@ -15,7 +15,11 @@ api_router = APIRouter(prefix="/api/v1")
 
 db_session = Annotated[AsyncSession, Depends(get_db_session)]
     
+async def get_me(access_token: Annotated[str | None, Cookie()] = None):
+    response = await get_current_user(token=access_token, secret=app_settings.jwt_secret, algorithm=app_settings.jwt_algorithm)
+    return response
 
+get_current_user_dependencie = Annotated[User | None, Depends(get_me)]
     
 @api_router.post("/create-user", response_model=User)
 async def create_new_user(createUser: CreateUser, db: db_session):
@@ -35,6 +39,5 @@ async def get_users(db: db_session):
     return result
 
 @api_router.get("/me", response_model=User)
-async def me(access_token: Annotated[str | None, Cookie()] = None):
-    response = await get_current_user(token=access_token, secret=app_settings.jwt_secret, algorithm=app_settings.jwt_algorithm)
-    return response
+async def me(user: get_current_user_dependencie):
+    return user
