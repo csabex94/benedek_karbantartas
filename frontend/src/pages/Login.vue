@@ -11,7 +11,7 @@
             </div>
             <div class="flex flex-1 items-center justify-center">
                 <div class="w-full max-w-xs">
-                    <LoginForm />
+                    <LoginForm v-model="data" @submit:form="handleLogin" />
                 </div>
             </div>
         </div>
@@ -23,6 +23,19 @@
 </template>
 
 <script setup lang="ts">
+import { reactive } from 'vue';
 import { GalleryVerticalEnd } from "lucide-vue-next";
 import LoginForm from '@/components/new-york-v4/blocks/login-02/components/LoginForm.vue';
+import { postRequest } from "../httpClient";
+
+let data = reactive({
+    email: "",
+    password: ""
+});
+
+const handleLogin = async () => {
+    const result = await postRequest("/login", {email: data.email, password: data.password});
+    console.log(result);
+}
+
 </script>

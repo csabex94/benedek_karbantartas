@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from "vue"
+import type { HTMLAttributes } from "vue";
+import {computed} from 'vue';
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,8 +11,24 @@ import {
 import { Input } from '@/components/ui/input'
 
 const props = defineProps<{
-  class?: HTMLAttributes["class"]
+  class?: HTMLAttributes["class"],
+  modelValue: {
+    email: string | number | undefined,
+    password: string | number | undefined
+  }
 }>()
+
+const emits = defineEmits(["update:modelValue", "submit:form"]);
+
+const form = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value: string | number | undefined) {
+    emits("update:modelValue", value)
+  }
+});
+
 </script>
 
 <template>
@@ -29,7 +46,7 @@ const props = defineProps<{
         <FieldLabel for="email">
           Email
         </FieldLabel>
-        <Input id="email" type="email" placeholder="m@arterimpex.ro" required />
+        <Input v-model="form.email" id="email" type="email" placeholder="m@arterimpex.ro" required />
       </Field>
       <Field>
         <div class="flex items-center">
@@ -43,10 +60,10 @@ const props = defineProps<{
             Forgot your password?
           </a>
         </div>
-        <Input id="password" type="password" required />
+        <Input v-model="form.password" id="password" type="password" required />
       </Field>
       <Field>
-        <Button type="submit">
+        <Button type="button" @click="emits('submit:form')">
           Login
         </Button>
       </Field>

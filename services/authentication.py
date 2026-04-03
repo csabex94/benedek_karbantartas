@@ -1,23 +1,24 @@
 import jwt
 
 from datetime import datetime, timedelta, timezone
-from jwt.exceptions import InvalidTokenError
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 from database.schemas import UserSchema
-from models import CreateUser, LoginUser
+from models import CreateUser, LoginUser, User
 from utils.security_utils import password_hash, password_check
 from utils.exception_handler import CustomExceptionHandler
+from utils.config import get_settings, Settings
 
+app_settings: Settings = get_settings()
 
-def create_access_token(secret: str, algorithm: str, data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, secret, algorithm=algorithm)
+    encoded_jwt = jwt.encode(to_encode, app_settings.jwt_secret, algorithm=app_settings.jwt_algorithm)
     return encoded_jwt
 
 async def get_user_by_email(db: AsyncSession, email: str) -> UserSchema | None:
@@ -50,7 +51,7 @@ async def create_user(db: AsyncSession, createUser: CreateUser):
     return userSchema
 
 
-async def login_user(db: AsyncSession, loginUser: LoginUser, secret: str, algorithm: str):
+async def login_user(db: AsyncSession, loginUser: LoginUser):
     user = await get_user_by_email(db, loginUser.email)
     
     if user is None:
@@ -61,13 +62,5 @@ async def login_user(db: AsyncSession, loginUser: LoginUser, secret: str, algori
     if attempt is False:
         raise CustomExceptionHandler('incorrect_password', 'Incorrect password', 422)
     data={"id": user.id, "fullname": user.fullname, "email": user.email}
-    access_token = create_access_token(secret=secret, algorithm=algorithm, data=data)
-    
-    return [access_token, user]
-
-async def get_current_user(token: str, secret: str, algorithm: str):
-    try:
-        payload = jwt.decode(token, secret, algorithms=[algorithm])
-        return payload
-    except InvalidTokenError:
-        raise CustomExceptionHandler('unauthorized', 'Access Denied', 401)
+    access_token = create_access_token(data=data)
+    return [access_token, data]

@@ -29,4 +29,10 @@ export declare global {
         name: string;
         details: ?string;
     }
+
+    interface IUser {
+        id: number;
+        fullname: string;
+        email: string;
+    }
 }
